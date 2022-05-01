@@ -32,14 +32,17 @@ class _LoadingState extends State<Loading> {
         {'lat':lat.toString(),'lon':long.toString(), 'appid':apikey, 'units':'metric'});
     Uri url2 = Uri.https('api.openweathermap.org', '/data/2.5/air_pollution',
         {'lat':lat.toString(),'lon':long.toString(), 'appid':apikey, 'units':'metric'});
-    Network network = Network(url,url2);
+    Uri url3 = Uri.parse('http://mongsil1012.iptime.org:3111/api/hello');
+    Network network = Network(url,url2,url3);
     var weatherData = await network.getJsonData();
     var airData = await network.getAirData();
+    var serverData = await network.getServerData();
 
     Navigator.push(context,MaterialPageRoute(builder: (context){
       return MainScreen(
         parseWeatherData: weatherData,
         parseAirPollution: airData,
+        parseServerData: serverData,
       );
     }));
   }

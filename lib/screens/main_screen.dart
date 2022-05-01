@@ -7,9 +7,10 @@ import 'package:weatherassi/model/model.dart';
 
 class MainScreen extends StatefulWidget {
   //const MainScreen({Key? key}) : super(key: key);
-  MainScreen({this.parseWeatherData, this.parseAirPollution});
+  MainScreen({this.parseWeatherData, this.parseAirPollution, this.parseServerData});
   final dynamic parseWeatherData;
   final dynamic parseAirPollution;
+  final dynamic parseServerData;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -26,15 +27,20 @@ class _MainScreenState extends State<MainScreen> {
   late String des;
   late double dust1;
   late double dust2;
+  String serverStr = 'local server not connected...';
   var date = DateTime.now();
 
   @override
   void initState(){
     super.initState();
-    updateData(widget.parseWeatherData, widget.parseAirPollution);
+    updateData(
+        widget.parseWeatherData,
+        widget.parseAirPollution,
+        widget.parseServerData
+    );
   }
 
-  void updateData(dynamic weatherData, dynamic airData){
+  void updateData(dynamic weatherData, dynamic airData, dynamic serverData){
     double temp_raw = weatherData['main']['temp'];
     int condition = weatherData['weather'][0]['id'];
     int index = airData['list'][0]['main']['aqi'];
@@ -46,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
     des = weatherData['weather'][0]['description'];
     airIcon = model.getAirIcon(index);
     airState = model.getAirCondition(index);
+    serverStr = serverData['string'];
   }
 
   String getSystemTime(){
@@ -138,6 +145,17 @@ class _MainScreenState extends State<MainScreen> {
                                     )
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 40.0,
+                            ),
+                            Text(
+                              serverStr,
+                              style: GoogleFonts.lato(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                              ),
                             ),
                           ],
                         ),
